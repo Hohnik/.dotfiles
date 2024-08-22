@@ -6,21 +6,20 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
 fi
 
 
-
 # ----- Plugins & Settings -----
 plugins=(git zsh-autosuggestions zsh-syntax-highlighting macos z)
+
 
 # ----- Shell Settings -----
 export ZSH="$HOME/.oh-my-zsh" # Path to your oh-my-zsh installation.
 ZSH_THEME="powerlevel10k/powerlevel10k" # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
-
-
 source $ZSH/oh-my-zsh.sh
 zstyle ':completion:*' menu select
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+export EDITOR="nvim"
 
-
+# ----- Alias -----
 alias catcat='bat'
 alias showvim='vim $(fzf)'
 alias gs='git status --short'
@@ -29,15 +28,10 @@ alias ls='colorls -1'
 alias tree='ls --tree'
 alias vim='nvim'
 
+
 # ----- Path Variables -----
 export PATH=/opt/homebrew/sbin:$PATH
 export PATH=/opt/homebrew/bin:$PATH
-
-
-
-
-
-
 
 
 # >>> conda initialize >>>
@@ -75,3 +69,19 @@ else
   compdef __pip -P 'pip[0-9.]#'
 fi
 # pip zsh completion end
+
+# yazi -> yy
+function yy() {
+ 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    yazi "$@" --cwd-file="$tmp"
+	if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+#yazi -> yy
+
+# ----- Auto Commands -----
+# source ~/bin/auto_activate_conda_env.sh
+
+
